@@ -1,0 +1,88 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+form .card{
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    border: 2px solid rgb(12, 206, 236);
+    border-radius: 1.5REM;
+    height: 70vh;
+    width: 35%;
+    position: absolute;
+    top: 5rem;
+    left: 10rem;
+    overflow: hidden;
+    transition: all .4s ease-in-out;
+    margin: 1rem;
+    animation: infinite;
+    animation-duration: 5s;
+}
+.card:hover{
+    transform: scale(1.05);
+}
+
+.card img{
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border: 1px solid black;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 5px;
+}  
+.card h3{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  gap: 15px;
+
+}
+
+#edit-btn{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    font-style: normal;
+    gap: 1vw;
+    border-radius: .5rem;
+    padding: .8rem 1.6rem;
+    cursor: pointer;
+    width: 80%;
+    height: auto;
+    background-color: green;
+}
+
+#logout-btn{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+        font-style: normal;
+        gap: 1vw;
+        border-radius: .5rem;
+        padding: .8rem 1.6rem;
+        cursor: pointer;
+        width: 80%;
+        height: auto;
+        background-color: red;
+    }
+
+    #edit-btn:hover{background-color: darkgreen;
+        transform: scale(1.03);}
+    
+    #logout-btn:hover{background-color: darkred;
+        transform: scale(1.03);
+    }
+
+
+
+
+
