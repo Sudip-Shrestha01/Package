@@ -1,76 +1,80 @@
 <?php
 include('dbconfig.php');
 
+
 if (isset($_POST['add_package_btn'])) {
     $pacloc = $_POST['location'];
     $desc = $_POST['description'];
     $price = $_POST['price'];
     $discount = $_POST['discount'];
     $detail = $_POST['detail'];
-    
+
     // File upload
-    $pacimg = $_FILES['img']['name']; // Corrected
+    $pacimg = $_FILES['img']['name'];
 
     // Prepare the SQL statement with prepared statements
-    $query_insert = "INSERT INTO packages (pac_loc, pac_dec, price, discount,pac_detail, image) VALUES (?, ?, ?, ?, ?, ?)";
+    $query_insert = "INSERT INTO packages (pac_loc, pac_dec, price, discount, pac_detail, image) VALUES (?, ?, ?, ?, ?, ?)";
     $stmt = mysqli_prepare($conn, $query_insert);
-    mysqli_stmt_bind_param($stmt, 'ssddss', $pacloc, $desc, $price, $discount,$detail, $pacimg);
+    mysqli_stmt_bind_param($stmt, 'ssddss', $pacloc, $desc, $price, $discount, $detail, $pacimg);
 
     // Execute the statement
     $query_insert_run = mysqli_stmt_execute($stmt);
 
-    if($query_insert_run) {
+    if ($query_insert_run) {
         // Move the uploaded file to the destination directory
-        move_uploaded_file($_FILES["img"]["tmp_name"], "upload/".$_FILES["img"]["name"]); // Corrected
+        move_uploaded_file($_FILES["img"]["tmp_name"], "upload/" . $_FILES["img"]["name"]);
 
         $_SESSION['status'] = "Package Added Successfully";
-        header('Location: addPackage.php');
+        header('Location: myPackage.php');
     } else {
         $_SESSION['status'] = "Package Not Added";
         header('Location: addPackage.php');
     }
+    exit();
 }
 
 
 //edit-package//
 
-if(isset($_POST['edit_package_btn'])) {
-    $id = $_POST['edit_id'];
-    $loc = $_POST['location'];
-    $desc = $_POST['description'];
-    $price = $_POST['price'];
-    $discount = $_POST['discount'];
-    $det = $_POST['detail'];
+if (isset($_POST['edit_package_btn'])) {
+    $id = mysqli_real_escape_string($conn, $_POST['edit_id']);
+    $loc = mysqli_real_escape_string($conn, $_POST['location']);
+    $desc = mysqli_real_escape_string($conn, $_POST['description']);
+    $price = mysqli_real_escape_string($conn, $_POST['price']);
+    $discount = mysqli_real_escape_string($conn, $_POST['discount']);
+    $det = mysqli_real_escape_string($conn, $_POST['detail']);
     $new_img = $_FILES['img']['name'];
-    $old_img = $_POST['old_image'];
+    $old_img = mysqli_real_escape_string($conn, $_POST['old_image']);
 
-    if($new_img != '') {
-        if(file_exists("upload/".$_FILES['img']['name'])) {
-            $filename = $_FILES['img']['name'];
-            $_SESSION['status'] = "Image already exists: ".$filename;
+    if ($new_img != '') {
+        if (file_exists("upload/" . $new_img)) {
+            $_SESSION['status'] = "Image already exists: " . $new_img;
             header("Location: myPackage.php");
             exit; // Make sure to exit after redirection
         }
+    } else {
+        $new_img = $old_img; // Use the old image if no new image is uploaded
     }
 
-    $query = "UPDATE packages SET pac_loc = '$loc', pac_dec = '$desc', price = '$price', discount = '$discount', pac_detail = '$det', image = '$new_img' WHERE pac_id='$id' ";
+    $query = "UPDATE packages SET pac_loc = '$loc', pac_dec = '$desc', price = '$price', discount = '$discount', pac_detail = '$det', image = '$new_img' WHERE pac_id='$id'";
     $query_run = mysqli_query($conn, $query);
 
-    if($query_run) {
-        if($_FILES['img']['name']) {
-            move_uploaded_file($_FILES["img"]["tmp_name"], "upload/".$_FILES["img"]["name"]);
-            unlink("upload/" . $old_img);
+    if ($query_run) {
+        if ($_FILES['img']['name']) {
+            move_uploaded_file($_FILES["img"]["tmp_name"], "upload/" . $_FILES["img"]["name"]);
+            if ($old_img && $old_img != $new_img) {
+                unlink("upload/" . $old_img);
+            }
         }
         $_SESSION['status'] = "Updated Successfully";
         header("Location: myPackage.php");
         exit;
     } else {
-        $_SESSION['status'] = "Not Updated Successfully";
+        $_SESSION['status'] = "Not Updated Successfully. Error: " . mysqli_error($conn);
         header("Location: editPackage.php");
         exit;
     }
 }
-
 //for deleting package//
 
 
@@ -146,11 +150,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_id'])) {
     header("Location: bookings.php");
     exit();
 }
-?>
-
-
-
-
-
-
-

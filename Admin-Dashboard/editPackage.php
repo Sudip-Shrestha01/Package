@@ -27,7 +27,7 @@
 
                         if (mysqli_num_rows($query_run) > 0) {
                             foreach ($query_run as $row) {
-                                
+
                         ?>
                                 <form action="pac.php" method="POST" enctype="multipart/form-data">
 
@@ -35,7 +35,18 @@
 
                                     <div class="form-group">
                                         <label for="">Location:</label>
-                                        <input type="text" name="location" value="<?php echo $row['pac_loc']; ?>" class="form-control">
+                                        <select name="location" id="location" required class="form-control">
+                                            <option value="Kathmandu">Kathmandu</option>
+                                            <option value="Pokhara">Pokhara</option>
+                                            <option value="Lumbini">Lumbuni</option>
+                                            <option value="Kalinchowk">Kalinchowk</option>
+                                            <option value="Janakpur">Janakpur</option>
+                                            <option value="Chitwan">Chitwan</option>
+                                            <option value="Shailung">Shailung</option>
+                                            <option value="Rara">Rara</option>
+                                            <option value="Solukhumbu">Solukhumbu</option>
+                                            <option value="Manakamana">Manakamana</option>
+                                        </select>
                                     </div>
                                     <div class="form-group">
                                         <label for="">Description:</label>
@@ -62,7 +73,7 @@
                                         <input type="hidden" name="old_image" value="<?php echo $row['image']; ?>">
                                     </div><br>
 
-                                    <img src="<?php echo "upload/".$row['image']; ?>" width="100px"> <br><br>
+                                    <img src="<?php echo "upload/" . $row['image']; ?>" width="100px"> <br><br>
 
                                     <button type="submit" name="edit_package_btn" class="btn btn-primary">Edit</button>
 
